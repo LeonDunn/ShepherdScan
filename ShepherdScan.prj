@@ -10,13 +10,13 @@
     </param.icons>
     <param.version>0.99</param.version>
     <param.authnamewatermark>IsoAnalytics - Dr Leon Dunn</param.authnamewatermark>
-    <param.email>info@eflimqa.com</param.email>
-    <param.company>IsoAnalytics</param.company>
+    <param.email>info@efilmqa.com</param.email>
+    <param.company>IsoAnalytics Pty. Ltd.</param.company>
     <param.summary>This program logs rplan dicom files.</param.summary>
     <param.description>Integrated Systems for Logfile Analysis</param.description>
     <param.screenshot>${PROJECT_ROOT}\Logos\Logo.png</param.screenshot>
     <param.guid />
-    <param.installpath.string>\IsoAnalytics\ShepherdScan\</param.installpath.string>
+    <param.installpath.string>\IsoAnalytics Pty. Ltd.\ShepherdScan\</param.installpath.string>
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
@@ -82,8 +82,10 @@
     <fileset.package />
     <fileset.depfun>
       <file>${PROJECT_ROOT}\eFluenceQA_Agility.m</file>
+      <file>${PROJECT_ROOT}\eFluenceQA_iCOM.m</file>
       <file>${PROJECT_ROOT}\eFluenceQA_MMLC.m</file>
       <file>${PROJECT_ROOT}\Logos\ICON.png</file>
+      <file>${PROJECT_ROOT}\UnzipiCOM.m</file>
       <file>${PROJECT_ROOT}\Varian2IEC.m</file>
       <file>${PROJECT_ROOT}\VarianTLog_MLC.m</file>
     </fileset.depfun>
@@ -97,11 +99,35 @@
       <root>C:\Program Files\MATLAB\R2022a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
       </toolbox>
     </matlab>
     <platform>

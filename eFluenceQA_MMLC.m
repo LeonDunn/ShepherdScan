@@ -278,15 +278,15 @@ end
               opening_pos{k}(:,2) = MLC_B{k}{l}(:);
               
               %jaws:
-              opening_pos_x1{k}(1,1) = X1_JAW{k}{l};
-              opening_pos_x2{k}(1,1) = X2_JAW{k}{l};
+              opening_pos_x1{k}(1,1) = X1_JAW{k}{l}+2;
+              opening_pos_x2{k}(1,1) = X2_JAW{k}{l}-2;
               opening_pos_y1{k}(1,1) = Y1_JAW{k}{l};
-              opening_pos_y2{k}(1,1) = Y2_JAW{k}{l};
+              opening_pos_y2{k}(1,1) = -1*Y2_JAW{k}{l};
            
               X1_JAW_ROI(1).Position(1) = X1_JAW_ROI(1).Position(1)+(opening_pos_x1{k}(1,1));
               X2_JAW_ROI(1).Position(1) = X2_JAW_ROI(1).Position(1)+(opening_pos_x2{k}(1,1));
               Y1_JAW_ROI(1).Position(2) = Y1_JAW_ROI(1).Position(2)-(opening_pos_y1{k}(1,1));
-              Y2_JAW_ROI(1).Position(2) = Y2_JAW_ROI(1).Position(2)-(opening_pos_y2{k}(1,1));
+              Y2_JAW_ROI(1).Position(2) = Y2_JAW_ROI(1).Position(2)+(opening_pos_y2{k}(1,1));
     
            
                for m = 1:length(MLC_A{k}{l})% MLC positions for one control point control point
@@ -295,7 +295,7 @@ end
                         
                     %update current position to next position
                     A(m).Position(1) = A(m).Position(1)+(opening_pos{k}(m,1)); %leaf offset A
-                    B(m).Position(1) = B(m).Position(1)-(-1*opening_pos{k}(m,2)); %leaf offset A
+                    B(m).Position(1) = B(m).Position(1)+(opening_pos{k}(m,2)); %leaf offset A
 %                     if m > 2
 %                         if (A(m).Position(1) == A(m-1).Position(1)) && (B(m).Position(1) == B(m-1).Position(1)) 
 %                             continue

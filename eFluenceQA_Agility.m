@@ -1,4 +1,4 @@
-function eFluenceQA_Agility(fileName, OutFolder)
+function eFluenceQA_Agility(app,fileName, OutFolder)
 %get the number of films and
 if iscell(fileName)
     num_films = length(fileName);
@@ -173,8 +173,8 @@ end
 %               fluence_grid(:,1:A_max) = 0;
 %               fluence_grid(:,B_max:end) = 0;
               %jaws:
-              opening_pos_x1{k}(1,1) = A_max-5;
-              opening_pos_x2{k}(1,1) = B_max+5;
+              opening_pos_x1{k}(1,1) = A_max+2;
+              opening_pos_x2{k}(1,1) = B_max-2;
               opening_pos_y1{k}(1,1) = Y1_JAW{k}{l};
               opening_pos_y2{k}(1,1) = -1*Y2_JAW{k}{l};
               
@@ -184,8 +184,8 @@ end
 
               X1_JAW_ROI(1).Position(1) = X1_JAW_ROI(1).Position(1)+(opening_pos_x1{k}(1,1));
               X2_JAW_ROI(1).Position(1) = X2_JAW_ROI(1).Position(1)+(opening_pos_x2{k}(1,1));
-              Y1_JAW_ROI(1).Position(2) = Y1_JAW_ROI(1).Position(2)-(opening_pos_y2{k}(1,1));
-              Y2_JAW_ROI(1).Position(2) = Y2_JAW_ROI(1).Position(2)+(opening_pos_y1{k}(1,1));
+              Y1_JAW_ROI(1).Position(2) = Y1_JAW_ROI(1).Position(2)-(opening_pos_y1{k}(1,1));
+              Y2_JAW_ROI(1).Position(2) = Y2_JAW_ROI(1).Position(2)+(opening_pos_y2{k}(1,1));
               %Y1_JAW_ROI(1).Position(2) = Y1_JAW_ROI(1).Position(2)-(opening_pos_y1{k}(1,1));
               %Y2_JAW_ROI(1).Position(2) = Y2_JAW_ROI(1).Position(2)-(opening_pos_y2{k}(1,1)); 
            
@@ -268,21 +268,14 @@ end
         %final_fluence_plan = imrotate(final_fluence_plan,1*CollAngle(k,1),'bilinear','crop');
     end
     %add them to the final plan fluence and then reset the coll
-    final_fluence_beam{k} = (fluence_grid_total);
+    
     fluence_grid_total = zeros(400,400);
     final_fluence_plan = final_fluence_plan + final_fluence_beam{k};
-    figure(k)
-    imagesc(final_fluence_beam{k})
-    hold on
-    x = [0 400];
-    y = [200 200];
-    pl = line(x,y,'Color','red','LineStyle','--','LineWidth',1.5);
-    x = [200 200];
-    y = [0 400];
-    p2 = line(x,y,'Color','red','LineStyle','--','LineWidth',1.5);
+   
+
     %set(gca,'YDir','reverse');
    
-    writematrix(final_fluence_beam{k},strcat(OutFolder,PtID{1},'_',Plan{1},'_Beam_',num2str(k),'_',TxMACHINE{1},'.csv'));
+    writematrix(final_fluence_beam{k},strcat(OutFolder,PtID{1},'_',Plan{1},'_Beam_',num2str(k),'_',TxMACHINE{1},'_PLAN','.csv'));
     
 %     csvwrite(strcat('Beam_',num2str(k),'_',num2str(CollAngle(k)),'.csv'),final_fluence_beam{k})
     % if CollAngle(k,1)<180.1 %clockwise rotation
@@ -296,7 +289,14 @@ end
 %     multiWaitbar( 'Processing Beam(s)...', (k/length(MLC_A)), 'Color', 'g' );
     
     end
-    figure(k+1)
-    imagesc(final_fluence_plan)
-    writematrix(final_fluence_plan,strcat(OutFolder,PtID{1},'_',Plan{1},'_',TxMACHINE{1},'_TOTAL','.csv'))
+    fileNamePlan = strcat(OutFolder,PtID{1},'_',Plan{1},'_',TxMACHINE{1},'_TOTAL','_PLAN','.csv');
+    
+    writematrix(final_fluence_plan,strcat(OutFolder,PtID{1},'_',Plan{1},'_',TxMACHINE{1},'_TOTAL','_PLAN','.csv'))
+
+    app.PlanID = PtID{1};
+    app.PlanRx = Plan{1};
+    app.PlanBeam = 'TOTAL';
+    app.PlanMachine = TxMACHINE{1};
+    app.PlanImagePath = fileNamePlan;
+    
 end   
