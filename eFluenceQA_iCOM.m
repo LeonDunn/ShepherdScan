@@ -1,4 +1,4 @@
-function eFluenceQA_iCOM(app, fileNameiCOM, OutFolder)
+function [Name, ID, Field, Machine, Rx] = eFluenceQA_iCOM(fileNameiCOM, OutFolder)
 %get the number of films and
 icom_chk = (strfind(fileNameiCOM(1,:),'.xz'));
                 
@@ -44,7 +44,7 @@ end
 
         IDMatches = regexpi(iCOM_data{i},IDExp,'match', 'once');
         IDMatches = IDMatches(~cellfun(@isempty, IDMatches));
-        IDMatches = regexprep(IDMatches,'[^\/.a-zA-Z0-9]','');   
+        IDMatches = regexprep(IDMatches,'[^\/.a-zA-Z0-9]',' ');   
         ID{i} = IDMatches
 
         FieldMatches = regexpi(iCOM_data{i},FieldExp,'match', 'once');
@@ -475,18 +475,18 @@ for k = 1:length(MLC_A)
     Beamf = Beam{k}{1}
     Machinef = Machine{1}{1}(1,4:end)
     fileNameLog = strcat(OutFolder,IDf,'_',Rxf,'_',Machinef,'_',fName,'_TOTAL','_DEL','.csv') %this is the filename for the Watcher / Matcher
-    writematrix(final_fluence_beam{k},strcat(OutFolder,IDf,'_',Rxf,'_Beam_',Beamf,'_',Machinef,'_',fName,'_DEL','.csv'));
+    %writematrix(final_fluence_beam{k},strcat(OutFolder,IDf,'_',Rxf,'_Beam_',Beamf,'_',Machinef,'_',fName,'_DEL','.csv'));
   
     
 end
 
-    writematrix(final_fluence_plan,strcat(OutFolder,IDf,'_',Rxf,'_',Machinef,'_',fName,'_TOTAL','_DEL','.csv'))
-    
-    app.LogID = IDf;
-    app.LogRx = Rxf;
-    app.LogBeam = Beamf;
-    app.LogMachine = Machinef;
-    app.LogImagePath = fileNameLog;
+    writematrix(final_fluence_plan,strcat(OutFolder,IDf,'_',Rxf,'_',Beamf,'_',Machinef,'_',fName,'_TOTAL','_DEL','.csv'))
+
+
+        
+
+     
+      
 
     %app.UITable.Data = [TableData; {datestr(datetime('now')),IDf, Rxf, Beamf, Machinef, fileNameLog}]
     

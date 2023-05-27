@@ -1,4 +1,4 @@
-function eFluenceQA_Agility(app,fileName, OutFolder)
+function [PtName, PtID, Beams, TxMACHINE, Plan] = eFluenceQA_Agility(fileName, OutFolder)
 %get the number of films and
 if iscell(fileName)
     num_films = length(fileName);
@@ -45,7 +45,7 @@ end
         end
         %structs of structs
         CPS{j} = struct2cell(Beams{1,1}{i,1}.ControlPointSequence);
-        BeamDesc{j} = Beams{1,1}{i,1}.BeamDescription
+        BeamDesc{j} = Beams{1,1}{i,1}.BeamName;
         MU_Total{j} = struct2cell(dcm_info{1}.FractionGroupSequence.Item_1.ReferencedBeamSequence);
         j = j+1;
     end
@@ -274,8 +274,8 @@ end
    
 
     %set(gca,'YDir','reverse');
-   
-    writematrix(final_fluence_beam{k},strcat(OutFolder,PtID{1},'_',Plan{1},'_Beam_',num2str(k),'_',TxMACHINE{1},'_PLAN','.csv'));
+    planProcDate = datetime('now','Format','yyyyMMddHHmmss');
+    writematrix(final_fluence_beam{k},strcat(OutFolder,PtID{1},'_',Plan{1},'_',BeamDesc{k},'_',TxMACHINE{1},'_',string(planProcDate),'_P','.csv'));
     
 %     csvwrite(strcat('Beam_',num2str(k),'_',num2str(CollAngle(k)),'.csv'),final_fluence_beam{k})
     % if CollAngle(k,1)<180.1 %clockwise rotation
@@ -289,14 +289,9 @@ end
 %     multiWaitbar( 'Processing Beam(s)...', (k/length(MLC_A)), 'Color', 'g' );
     
     end
-    fileNamePlan = strcat(OutFolder,PtID{1},'_',Plan{1},'_',TxMACHINE{1},'_TOTAL','_PLAN','.csv');
-    
-    writematrix(final_fluence_plan,strcat(OutFolder,PtID{1},'_',Plan{1},'_',TxMACHINE{1},'_TOTAL','_PLAN','.csv'))
+    pause(5)
+    writematrix(final_fluence_plan,strcat(OutFolder,PtID{1},'_',Plan{1},'_',TxMACHINE{1},'_',string(planProcDate),'_TOTAL','_P','.csv'))
 
-    app.PlanID = PtID{1};
-    app.PlanRx = Plan{1};
-    app.PlanBeam = 'TOTAL';
-    app.PlanMachine = TxMACHINE{1};
-    app.PlanImagePath = fileNamePlan;
+    
     
 end   

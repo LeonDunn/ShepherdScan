@@ -1,13 +1,13 @@
-function [numpass, avg, GammaMap, image1, image2, filePathEval, filePathRef, dta, dd, thresh] = GammaEval(app, LogID, LogRx, LogBeam, LogMachine, filePathEval, filePathRef,  dta, dd, thresh)
+function [LogIDg,LogRxg,LogBeamg,LogMachineg,numpassg,filePathRefg,filePathEvalg] = GammaEval(app, LogIDg, LogRxg, LogBeamg, LogMachineg, filePathEvalg, filePathRefg,  dta, dd, thresh)
 %GAMMEVAL Summary of this function goes hereGammaEval(app, ID, Plan, Beam, Machine, inputFile, filePathRef, dta, dd, thresh)
 %   Detailed explanation goes here
-filePathRef
-filePathEval
-LogID
-LogBeam
-LogMachine
-image2 = readmatrix(filePathEval,'FileType','text','Delimiter',','); %delivery
-image1 = readmatrix(filePathRef,'FileType','text','Delimiter',','); %plan
+filePathRefg
+filePathEvalg
+LogIDg
+LogBeamg
+LogMachineg
+image2 = readmatrix(filePathEvalg,'FileType','text','Delimiter',','); %delivery
+image1 = readmatrix(filePathRefg,'FileType','text','Delimiter',','); %plan
 
 %normalise
 image1 = image1./(max(max(image1)));
@@ -101,15 +101,21 @@ GammaMap(~Mask) = 0.0;
 
 % Compute statistics
 numWithinField = nnz(Mask)
-numpass = nnz(GammaMap<1 & Mask)./numWithinField
-app.numpass = numpass;
+numpassg = nnz(GammaMap<1 & Mask)./numWithinField
 avg = sum(GammaMap(:))./numWithinField
-app.avg = avg;
+app.LogID = LogIDg;
+app.LogRx = LogRxg;
+app.LogBeam = LogBeamg;
+app.LogMachine = LogMachineg;
+app.numpass = numpassg;
+app.filePathRef = filePathRefg;
+app.filePathEval = filePathEvalg;
 
-TableData = app.UITable.Data
+
+TableData = app.UITable.Data;
 %current data
 %ADate, ID, plan, Beam, GPR, Plan path, Log Path
-app.UITable.Data = [TableData; {datestr(datetime('now')), LogID, LogRx, LogBeam, LogMachine, app.numpass*100, filePathRef, filePathEval}]
+app.UITable.Data = [TableData; {datestr(datetime('now')), app.LogID, app.LogRx, app.LogBeam, app.LogMachine, app.numpass*100, app.filePathRef, app.filePathEval}];
 
 
 

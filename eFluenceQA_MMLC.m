@@ -1,17 +1,8 @@
-% clear all
-% close all
-% %get the dicom file from a folder
-%  [input_film,pathname] = uigetfile('*.dcm','DICOM PLAN FILE (*.*)', ...
-%            'Select files', ... 
-%           'MultiSelect', 'on');
-%     %do nothing if cancelled
-%     if isequal(input_film,0)
-%        
-%        return
-%     end
-% tic
-function eFluenceQA_MMLC(fileName, OutFolder)
+function [PtName, PtID, Beams, TxMACHINE, Plan] = eFluenceQA_MMLC(fileName, OutFolder)
 %get the number of films and
+%fileName = 'RP.033697.N30 Nose.dcm'
+%OutFolder = 'C:\Temp\'
+
 if iscell(fileName)
     num_films = length(fileName);
     for q=1:num_films   
@@ -23,7 +14,7 @@ if iscell(fileName)
         PtSEX{q,1} = dcm_info{1}.PatientSex;
         Beams{q,1} = struct2cell(dcm_info{1}.BeamSequence);
         TxMACHINE{q,1} = Beams{1}{1}.TreatmentMachineName;
-        Plan{q,1} = dcm_info{1}.RTPlanLabel
+        Plan{q,1} = dcm_info{1}.RTPlanLabel;
 
     end
 else
@@ -37,7 +28,7 @@ else
         PtSEX{q,1} = dcm_info{1}.PatientSex;
         Beams{q,1} = struct2cell(dcm_info{1}.BeamSequence);
         TxMACHINE{q,1} = Beams{1}{1}.TreatmentMachineName;
-        Plan{q,1} = dcm_info{1}.RTPlanLabel
+        Plan{q,1} = dcm_info{1}.RTPlanLabel;
 
     end
 end
@@ -57,17 +48,10 @@ end
         end
         %structs of structs
         CPS{j} = struct2cell(Beams{1,1}{i,1}.ControlPointSequence);
-        %BeamDesc{j} = Beams{1,1}{i,1}.BeamDescription
+        BeamDesc{j} = Beams{1,1}{i,1}.BeamName;
         j = j+1;
     end
-    %if (size(BeamDesc,2) > 1)
-        %this is an IMRT plan we need to sum all the beams
-        %BeamDesc{end+1} = 'TOTAL';
-    %end
-    %for each control point, get the Coll angle, MU/frac structure and teh
-    %field names, Item_1, Item_2 etc - for Monaco Item_1 is the Y jaws and
-    %Item 2 is the MLC
-       %get the MU per feild where there are actual MLCs
+
     j = 1;
     k = 1;
     for i = 1:(size(struct2cell(dcm_info{1}.FractionGroupSequence.Item_1.ReferencedBeamSequence),1))
@@ -378,9 +362,9 @@ end
     figure(k)
     imagesc(final_fluence_beam{k})
     %set(gca,'YDir','reverse');
-    
+    planProcDate = datetime('now','Format','yyyyMMddHHmmss');
     %filename = strcat('_',PtID,'_','Beam_',num2str(k),'.csv')
-    writematrix(final_fluence_beam{k},strcat(OutFolder,PtID{1},'_',Plan{1},'_Beam_',num2str(k),'_',TxMACHINE{1},'.csv'));
+    writematrix(final_fluence_beam{k},strcat(OutFolder,PtID{1},'_',Plan{1},'_',BeamDesc{k},'_',string(planProcDate),'_',TxMACHINE{1},'_P','.csv'));
     % if CollAngle(k,1)<180.1 %clockwise rotation
     %     final_fluence_beam{k} = imrotate(fluence_grid_total,1*CollAngle(k,1),'bilinear','crop');
     %     %final_fluence_plan = imrotate(final_fluence_plan,1*CollAngle(k,1),'bilinear','crop');
@@ -390,19 +374,12 @@ end
     % end
     %reset the beam fluence
     %datestr(datetime('now')),': ',multiWaitbar( 'Processing Beam(s)...', (k/length(MLC_A)), 'Color', 'g' );
+  
+
     end
-    figure(k+1)
-    imagesc(final_fluence_plan)
-    writematrix(final_fluence_plan,strcat(OutFolder,PtID{1},'_',Plan{1},'_',TxMACHINE{1},'_TOTAL','.csv'))
+    pause(5)
+    writematrix(final_fluence_plan,strcat(OutFolder,PtID{1},'_',Plan{1},'_',string(planProcDate),'_',TxMACHINE{1},'_TOTAL','_P','.csv'))
+
+
 end   
   
-%    
-%     %reset the fluence
-%     
-% 
-%     %set(gca,'YDir','reverse');
-% 
-% multiWaitbar( 'Processing Beam(s)...','Close');
-% multiWaitbar( 'Processing Control Point(s)...', 'Close' );
-% multiWaitbar( 'Processing MLC Pair...', 'Close' );
-% toc
